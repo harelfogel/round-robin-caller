@@ -159,7 +159,7 @@ export default function ContactsPage() {
                         handleContactChange(index, "name", e.target.value)
                       }
                       className="w-full p-2 rounded border border-gray-700 bg-gray-900 text-white"
-                      placeholder="e.g. John Doe"
+                      placeholder="e.g. Arad Kastelino"
                     />
                   </div>
                   <div className="flex-1">
