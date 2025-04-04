@@ -75,10 +75,12 @@ export async function POST(request: Request) {
     );
 
     return NextResponse.json({ success: true, schedule });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as Error;
+
     console.error("Error generating schedule:", err);
     return NextResponse.json(
-      { success: false, error: err.message },
+      { success: false, error: error.message },
       { status: 500 }
     );
   }
@@ -95,10 +97,12 @@ export async function DELETE() {
     // await fs.writeFile(contactsFilePath, JSON.stringify([], null, 2), "utf8");
 
     return NextResponse.json({ success: true, message: "Plan deleted." });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as Error;
+
     console.error("Error deleting schedule:", err);
     return NextResponse.json(
-      { success: false, error: err.message },
+      { success: false, error: error.message },
       { status: 500 }
     );
   }

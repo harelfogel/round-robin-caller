@@ -8,12 +8,19 @@ interface Contact {
   phone: string;
 }
 
+interface MatchPair {
+  caller: Contact;
+  callee: Contact;
+}
+
+type WeeklySchedule = MatchPair[];
+
 export default function ContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([
     { name: "", phone: "" },
   ]);
   const [weeks, setWeeks] = useState<number>(1);
-  const [schedule, setSchedule] = useState<any[]>([]);
+  const [schedule, setSchedule] = useState<WeeklySchedule[]>([]);
   const [showForm, setShowForm] = useState<boolean>(true);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -258,7 +265,7 @@ export default function ContactsPage() {
                       Week {weekIndex + 1}
                     </td>
                     <td className="py-2 px-4 border-b border-gray-700 space-y-2">
-                      {weekItem.map((pair: any, i: number) => (
+                      {weekItem.map((pair: MatchPair, i: number) => (
                         <div key={i}>
                           <span className="font-semibold">
                             {pair.caller.name}
