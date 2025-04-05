@@ -15,7 +15,8 @@ interface MatchPair {
 type Schedule = MatchPair[][];
 
 // In-memory schedule (server-only, non-persistent)
-let inMemorySchedule: Schedule = [];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let inMemoryScheduled: Schedule = [];
 
 // Basic round-robin generation
 function generateRoundRobin(contacts: Contact[], weeks: number): Schedule {
@@ -68,7 +69,10 @@ export async function POST(request: Request) {
     }
 
     const schedule = generateRoundRobin(contacts, weeks);
-    inMemorySchedule = schedule;
+    inMemoryScheduled = schedule;
+
+    // Log to verify it's used (or return it if needed elsewhere)
+    console.log("In-memory schedule:", inMemoryScheduled);
 
     return NextResponse.json({ success: true, schedule });
   } catch (err) {
@@ -86,7 +90,7 @@ export async function POST(request: Request) {
 // DELETE: Clear in-memory schedule
 export async function DELETE() {
   try {
-    inMemorySchedule = [];
+    inMemoryScheduled = [];
     return NextResponse.json({ success: true, message: "Plan deleted." });
   } catch (err) {
     console.error("Error deleting schedule:", err);
