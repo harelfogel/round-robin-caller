@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import { parseCSV, parseExcel } from "../utils/importContacts";
 // Represents a single contact
 interface Contact {
   name: string;
@@ -108,6 +108,36 @@ export default function ContactsPage() {
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsLoading(true);
+    setLoadingMessage("Importing contacts...");
+
+    try {
+      let importedContacts: Contact[] = [];
+
+      if (file.name.endsWith(".csv")) {
+        importedContacts = await parseCSV(file);
+      } else if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
+        importedContacts = await parseExcel(file);
+      } else {
+        alert("Unsupported file format. Please upload CSV or Excel.");
+        return;
+      }
+
+      setContacts(importedContacts);
+    } catch (err) {
+      console.error("Error reading file:", err);
+      alert("Failed to import contacts. Check console for details.");
+    } finally {
+      setIsLoading(false);
+      setLoadingMessage("");
+      e.target.value = ""; // reset file input
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4 py-8">
       {/* Title */}
@@ -180,6 +210,19 @@ export default function ContactsPage() {
                 </div>
               </div>
             ))}
+            <div className="w-full">
+              <label className="block mb-2 text-sm font-semibold">
+                Import Contacts from CSV or Excel
+              </label>
+              <input
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileUpload}
+                className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4
+               file:rounded file:border-0 file:text-sm file:font-semibold
+               file:bg-blue-600 file:text-white hover:file:bg-blue-500"
+              />
+            </div>
 
             <button
               type="button"
